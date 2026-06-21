@@ -48,6 +48,8 @@ Admin can:
 - Select classes for exam
 - Select available rooms
 - Generate seating arrangement
+  <img width="897" height="763" alt="Screenshot 2026-06-21 182952" src="https://github.com/user-attachments/assets/680564f2-fc01-4f4b-bfc1-75feff8d3e27" />
+
 
 ---
 
@@ -59,6 +61,8 @@ The system automatically creates:
 - Student allocation
 - Empty seats information
 - Unallocated student list (if capacity is insufficient)
+<img width="977" height="766" alt="Screenshot 2026-06-21 183024" src="https://github.com/user-attachments/assets/6327878e-91f4-41e9-969c-8520346564e1" />
+<img width="936" height="840" alt="Screenshot 2026-06-21 183015" src="https://github.com/user-attachments/assets/7c3ac552-7bf6-460b-854a-24d84ecf0e96" />
 
 ---
 
