@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Examination Seat Allotment System
+    </title>
+
+<style>
+
+:root{
+    --primary:#2563eb;
+    --secondary:#0f172a;
+    --success:#10b981;
+    --danger:#ef4444;
+    --border:#cbd5e1;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f1f5f9;
+    padding:20px;
+}
+
+.container{
+    max-width:1300px;
+    margin:auto;
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:15px;
+    color:#0f172a;
+}
+
+.project-intro{
+    background:#eff6ff;
+    border:1px solid #93c5fd;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:25px;
+    line-height:1.8;
+}
+
+.nav{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.nav button{
+    padding:12px 20px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    background:#e2e8f0;
+}
+
+.nav .active{
+    background:#2563eb;
+    color:white;
+}
+
+.card{
+    background:white;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.room-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:15px;
+}
+
+.room-card{
+    border:2px solid #cbd5e1;
+    border-radius:12px;
+    padding:15px;
+    transition:0.2s;
+    cursor:pointer;
+}
+
+.room-card:hover{
+    border-color:#2563eb;
+    background:#eff6ff;
+}
+
+.btn{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-success{
+    background:#10b981;
+}
+
+.btn-danger{
+    background:#ef4444;
+}
+
+input, select{
+    width:100%;
+    padding:10px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+}
+
+.tag{
+    background:#dbeafe;
+    color:#1d4ed8;
+    padding:8px 12px;
+    border-radius:8px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    margin:5px;
+    font-weight:bold;
+}
+
+.tag-remove{
+    color:red;
+    cursor:pointer;
+}
+
+.summary-box{
+    background:#ecfeff;
+    border:1px solid #67e8f9;
+    padding:20px;
+    border-radius:12px;
+    margin-top:20px;
+}
+
+.danger-box{
+    background:#fee2e2;
+    border:1px solid #fca5a5;
+    padding:20px;
+    border-radius:12px;
+    margin-top:20px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+th, td{
+    border:1px solid #cbd5e1;
+    padding:12px;
+    text-align:center;
+}
+
+.editable-cell{
+    background:white;
+    font-weight:bold;
+}
+
+.empty-seat{
+    background:#f1f5f9;
+    color:#94a3b8;
+}
+
+@media print{
+
+    .no-print{
+        display:none;
+    }
+
+    body{
+        background:white;
+    }
+
+    .container{
+        box-shadow:none;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>
+        🎓 EXAMINATION SEAT ALLOTMENT SYSTEM
+    </h1>
+
+    <div class="project-intro">
+
+        <b>Project Introduction:</b>
+
+        <br><br>
+
+        The Examination Seat Allotment System is a smart and efficient
+        web-based application developed to automate the process of exam
+        seating arrangement in universities and educational institutions.
+
+        <br><br>
+    </div>
+
+    <div class="nav no-print">
+
+        <button id="tab-planner"
+                class="active"
+                onclick="showTab('planner')">
+
+            Exam Planner
+
+        </button>
+
+        <button id="tab-manager"
+                onclick="showTab('manager')">
+
+            Database Manager
+
+        </button>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- MAIN PAGE -->
+    <!-- ========================= -->
+
+    <div id="planner">
+
+        <div id="step1">
+
+            <div class="card no-print">
+
+                <h3>
+                    1️⃣ Select Class for Exam
+                </h3>
+
+                <select id="class-dropdown"></select>
+
+                <button class="btn"
+                        style="margin-top:20px;"
+                        onclick="addtoExam()">
+
+                    OK
+
+                </button>
+
+            </div>
+
+            <div class="card no-print">
+
+                <div id="exam-list">
+
+                    <small>
+                        No classes selected...
+                    </small>
+
+                </div>
+
+            </div>
+
+            <div class="card no-print">
+
+                <h3>
+                    2️⃣ Select Rooms
+                </h3>
+
+                <div id="room-list"
+                     class="room-grid">
+
+                </div>
+
+            </div>
+
+            <button class="btn btn-success no-print"
+                    style="width:100%;
+                           padding:15px;
+                           font-size:18px;"
+                    onclick="generate()">
+
+                🚀 Generate Seating Plan
+
+            </button>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- RESULT PAGE -->
+        <!-- ========================= -->
+
+        <div id="step2"
+             style="display:none;">
+
+            <div id="output"></div>
+
+            <button class="btn no-print"
+                    style="margin-top:20px;"
+                    onclick="backToMain()">
+
+                ← Back
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- DATABASE MANAGER -->
+    <!-- ========================= -->
+
+    <div id="manager"
+         style="display:none;">
+
+        <div class="card">
+
+            <h3>Add Students</h3>
+
+            <div class="grid">
+
+                <input type="text"
+                       id="m-br"
+                       placeholder="Branch">
+
+                <select id="m-sem">
+
+                    <option>1st</option>
+                    <option>2nd</option>
+                    <option>3rd</option>
+                    <option>4th</option>
+                    <option>5th</option>
+                    <option>6th</option>
+
+                </select>
+
+                <input type="number"
+                       id="m-start"
+                       placeholder="Start Roll">
+
+                <input type="number"
+                       id="m-end"
+                       placeholder="End Roll">
+
+                <button class="btn"
+                        onclick="save('student')">
+
+                    Save
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Add Rooms</h3>
+
+            <div class="grid">
+
+                <input type="text"
+                       id="r-nm"
+                       placeholder="Room Name">
+
+                <input type="number"
+                       id="r-rs"
+                       placeholder="Rows">
+
+                <input type="number"
+                       id="r-cs"
+                       placeholder="Columns">
+
+                <button class="btn"
+                        onclick="save('room')">
+
+                    Save Room
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <div id="db-view"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let config = {
+    groups: [],
+    rooms: []
+};
+
+let selectedGroups = [];
+
+async function refresh(){
+
+    const res =
+        await fetch('/api/get_config');
+
+    config = await res.json();
+
+    document.getElementById('class-dropdown').innerHTML =
+
+        config.groups.map((g, i) => `
+
+            <option value="${i}">
+
+                ${g.branch} - ${g.semester}
+                (${g.count} Students)
+
+            </option>
+
+        `).join('');
+
+    document.getElementById('room-list').innerHTML =
+
+        config.rooms.map((r, i) => `
+
+            <label class="room-card">
+
+                <input type="checkbox"
+                       class="r-chk"
+                       value="${i}">
+
+                <div style="margin-top:10px;">
+
+                    <h3 style="color:#2563eb;">
+                        ${r.name}
+                    </h3>
+
+                    <br>
+
+                    <p>
+                        🪑 Rows :
+                        <b>${r.rows}</b>
+                    </p>
+
+                    <p>
+                        📏 Columns :
+                        <b>${r.cols}</b>
+                    </p>
+
+                    <p>
+                        👨‍🎓 Capacity :
+                        <b>${r.rows * r.cols}</b>
+                    </p>
+
+                </div>
+
+            </label>
+
+        `).join('');
+
+    document.getElementById('db-view').innerHTML = `
+
+        <h3>Student Database</h3>
+
+        <table>
+
+            <tr>
+
+                <th>Branch</th>
+                <th>Semester</th>
+                <th>Students</th>
+                <th>Action</th>
+
+            </tr>
+
+            ${config.groups.map(g => `
+
+                <tr>
+
+                    <td>${g.branch}</td>
+
+                    <td>${g.semester}</td>
+
+                    <td>${g.count}</td>
+
+                    <td>
+
+                        <button class="btn btn-danger"
+                                onclick="deleteData(false,
+                                '${g.branch}',
+                                '${g.semester}')">
+
+                            Delete
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `).join('')}
+
+        </table>
+
+        <br><br>
+
+        <h3>Room Database</h3>
+
+        <table>
+
+            <tr>
+
+                <th>Room</th>
+                <th>Rows</th>
+                <th>Columns</th>
+                <th>Capacity</th>
+                <th>Action</th>
+
+            </tr>
+
+            ${config.rooms.map(r => `
+
+                <tr>
+
+                    <td>${r.name}</td>
+
+                    <td>${r.rows}</td>
+
+                    <td>${r.cols}</td>
+
+                    <td>${r.rows * r.cols}</td>
+
+                    <td>
+
+                        <button class="btn btn-danger"
+                                onclick="deleteRoom('${r.name}')">
+
+                            Delete
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `).join('')}
+
+        </table>
+
+    `;
+}
+
+function showTab(tab){
+
+    document.getElementById('planner').style.display =
+        tab === 'planner' ? 'block' : 'none';
+
+    document.getElementById('manager').style.display =
+        tab === 'manager' ? 'block' : 'none';
+
+    document.getElementById('tab-planner').className =
+        tab === 'planner' ? 'active' : '';
+
+    document.getElementById('tab-manager').className =
+        tab === 'manager' ? 'active' : '';
+}
+
+function backToMain(){
+
+    document.getElementById('step1').style.display =
+        'block';
+
+    document.getElementById('step2').style.display =
+        'none';
+}
+
+async function save(type){
+
+    let payload = { type };
+
+    if(type === 'student'){
+
+        payload.branch =
+            document.getElementById('m-br').value;
+
+        payload.semester =
+            document.getElementById('m-sem').value;
+
+        payload.start_roll =
+            document.getElementById('m-start').value;
+
+        payload.end_roll =
+            document.getElementById('m-end').value;
+
+    }else{
+
+        payload.name =
+            document.getElementById('r-nm').value;
+
+        payload.rows =
+            document.getElementById('r-rs').value;
+
+        payload.cols =
+            document.getElementById('r-cs').value;
+    }
+
+    await fetch('/api/add_data', {
+
+        method:'POST',
+
+        headers:{
+            'Content-Type':'application/json'
+        },
+
+        body:JSON.stringify(payload)
+
+    });
+
+    refresh();
+
+    alert("Saved Successfully!");
+}
+
+async function deleteData(all, branch, semester){
+
+    if(!confirm("Delete data?")) return;
+
+    await fetch('/api/delete_students', {
+
+        method:'POST',
+
+        headers:{
+            'Content-Type':'application/json'
+        },
+
+        body:JSON.stringify({
+            all,
+            branch,
+            semester
+        })
+
+    });
+
+    refresh();
+}
+
+async function deleteRoom(name){
+
+    if(!confirm("Delete room?")) return;
+
+    await fetch('/api/delete_room', {
+
+        method:'POST',
+
+        headers:{
+            'Content-Type':'application/json'
+        },
+
+        body:JSON.stringify({
+            name
+        })
+
+    });
+
+    refresh();
+}
+
+async function addtoExam(){
+
+    const idx =
+        document.getElementById('class-dropdown').value;
+
+    const g = config.groups[idx];
+
+    const alreadyExists =
+        selectedGroups.find(
+            x => x.branch === g.branch &&
+                 x.semester === g.semester
+        );
+
+    if(alreadyExists){
+
+        alert("Class already selected!");
+
+        return;
+    }
+
+    const res = await fetch('/api/get_rolls', {
+
+        method:'POST',
+
+        headers:{
+            'Content-Type':'application/json'
+        },
+
+        body:JSON.stringify({
+            branch:g.branch,
+            semester:g.semester
+        })
+
+    });
+
+    const rolls = await res.json();
+
+    const formattedRolls = rolls.map(
+        r => `${g.branch}-${g.semester}-${r}`
+    );
+
+    selectedGroups.push({
+        ...g,
+        rolls: formattedRolls
+    });
+
+    renderSelectedGroups();
+}
+
+function renderSelectedGroups(){
+
+    const box =
+        document.getElementById('exam-list');
+
+    if(selectedGroups.length === 0){
+
+        box.innerHTML =
+            "<small>No classes selected...</small>";
+
+        return;
+    }
+
+    let total = 0;
+
+    box.innerHTML = `
+
+        <h3>
+            You Have Selected
+        </h3>
+
+    `;
+
+    box.innerHTML += selectedGroups.map((g, i) => {
+
+        total += g.count;
+
+        return `
+
+            <span class="tag">
+
+                ${g.branch}-${g.semester}
+
+                (${g.count} Students)
+
+                <span class="tag-remove"
+                      onclick="removeExam(${i})">
+
+                    ✖
+
+                </span>
+
+            </span>
+
+        `;
+
+    }).join('');
+
+    box.innerHTML += `
+
+        <div class="summary-box">
+
+            <h2>
+                Total Students :
+                ${total}
+            </h2>
+
+        </div>
+
+    `;
+}
+
+function removeExam(i){
+
+    selectedGroups.splice(i,1);
+
+    renderSelectedGroups();
+}
+
+async function generate(){
+
+    const roomCheckboxes =
+        document.querySelectorAll('.r-chk:checked');
+
+    const rooms =
+        Array.from(roomCheckboxes)
+        .map(c => config.rooms[c.value]);
+
+    if(selectedGroups.length === 0){
+
+        alert("Select classes first!");
+
+        return;
+    }
+
+    if(rooms.length === 0){
+
+        alert("Select rooms!");
+
+        return;
+    }
+
+    const res = await fetch('/api/allocate', {
+
+        method:'POST',
+
+        headers:{
+            'Content-Type':'application/json'
+        },
+
+        body:JSON.stringify({
+            groups:selectedGroups.map(g => g.rolls),
+            rooms
+        })
+
+    });
+
+    const data = await res.json();
+
+    let html = `
+
+        <div class="summary-box">
+
+            <h2>
+                📊 Allocation Summary
+            </h2>
+
+            <p><b>Total Students :</b> ${data.total_students}</p>
+
+            <p><b>Total Capacity :</b> ${data.total_capacity}</p>
+
+            <p><b>Allocated Students :</b> ${data.allocated_students}</p>
+
+            <p><b>Empty Seats :</b> ${data.empty_seats}</p>
+
+            <p><b>Unallocated Students :</b> ${data.unallocated_count}</p>
+
+        </div>
+
+    `;
+
+    data.results.forEach(room => {
+
+        html += `
+
+            <h2 style="margin-top:30px;">
+
+                🏫 Room ${room.name}
+
+            </h2>
+
+            <table>
+
+        `;
+
+        room.plan.forEach(row => {
+
+            html += "<tr>";
+
+            row.forEach(seat => {
+
+                if(seat === "EMPTY"){
+
+                    html += `
+
+                        <td class="empty-seat">
+
+                            EMPTY
+
+                        </td>
+
+                    `;
+
+                }else{
+
+                    html += `
+
+                        <td contenteditable="true"
+                            class="editable-cell">
+
+                            ${seat}
+
+                        </td>
+
+                    `;
+                }
+
+            });
+
+            html += "</tr>";
+
+        });
+
+        html += "</table>";
+
+    });
+
+    if(data.unallocated_count > 0){
+
+        html += `
+
+            <div class="danger-box">
+
+                <h2>
+                    ⚠️ Unallocated Students
+                </h2>
+
+                <br>
+
+                ${data.unallocated_students.map(s => `
+
+                    <span class="tag">
+
+                        ${s}
+
+                    </span>
+
+                `).join('')}
+
+            </div>
+
+        `;
+    }
+
+    html += `
+
+        <div style="margin-top:20px;"
+             class="no-print">
+
+            <button class="btn"
+                    onclick="window.print()">
+
+                🖨️ Print Seating Plan
+
+            </button>
+
+        </div>
+
+    `;
+
+    document.getElementById('output').innerHTML = html;
+
+    document.getElementById('step1').style.display =
+        'none';
+
+    document.getElementById('step2').style.display =
+        'block';
+}
+
+refresh();
+
+</script>
+
+</body>
+</html>
